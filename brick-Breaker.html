@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+     * { padding: 0; margin: 0; }
+     canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+</head>
+<body>
+
+<!--on defini un canvas est avec js on fera notre jeu dans ce canvas-->
+<canvas id="myCanvas" width="480" height="320"></canvas>
+
+<script>
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+
+	// taille de la balle défini un rayon de cercle
+	var ballRadius = 10;
+	// position de départ de la balle
+	var x = canvas.width/2;
+	var y = canvas.height-30;
+	// valeur à ajouter a "x" et "y" afin de déplacer le cercle grace a la fonction draw actualisé toutes les 10ms
+	var dx = 2;
+	var dy = -2;
+	// variable utilisé pour construire le paddle
+	var paddleHeight = 10;
+	var paddleWidth = 75;
+	// position de départ sur l'axe x
+	var paddleX = (canvas.width-paddleWidth)/2;
+	// vitesse de déplacement du paddle
+	var paddleVelocity = 6; 
+	// utilisé pour définir le controle
+	var rightPressed = false;
+	var leftPressed = false;
+	// setting des variables des briques
+	var brickRowCount = 5;
+	var brickColumnCount = 3;
+	var brickWidth = 75;
+	var brickHeight = 20;
+	var brickPadding = 10;
+	var brickOffsetTop = 30;
+	var brickOffsetLeft = 30;
+
+	var score = 0;
+
+	var lives = 3;
+
+	//création d'un tableau de briques
+	var bricks = [];
+	for(var c=0; c<brickColumnCount; c++) { // colonne
+	  bricks[c] = [];
+	  for(var r=0; r<brickRowCount; r++) { // row
+	    bricks[c][r] = { x: 0, y: 0, status: 1 }; // positions "x", "y" et status (hit or not)
+	  }
+	}
+
+	// ecoute si le control est utilisé 
+	document.addEventListener("keydown", keyDownHandler, false);
+	document.addEventListener("keyup", keyUpHandler, false);
+	// écoute la souris
+	document.addEventListener("mousemove", mouseMoveHandler, false);
+
+	// change les positions du paddle en fonction des positions de la souris
+	function mouseMoveHandler(e) {
+	    var relativeX = e.clientX - canvas.offsetLeft;
+	    if(relativeX > 0 && relativeX < canvas.width) {
+	        paddleX = relativeX - paddleWidth/2;
+	    }
+	}
+
+	// boutons appuyer
+	function keyDownHandler(e) {
+	    if(e.key == "Right" || e.key == "ArrowRight") {
+	        rightPressed = true;
+	    }
+	    else if(e.key == "Left" || e.key == "ArrowLeft") {
+	        leftPressed = true;
+	    }
+	}
+
+	// boutons relacher
+	function keyUpHandler(e) {
+	    if(e.key == "Right" || e.key == "ArrowRight") {
+	        rightPressed = false;
+	    }
+	    else if(e.key == "Left" || e.key == "ArrowLeft") {
+	        leftPressed = false;
+	    }
+	}
+	// fonction collision qui fait une loop a trvaille la position des briques et les compares avec la position de la balle à chaque frame
+	function collisionDetection() {
+	  for(var c=0; c<brickColumnCount; c++) {
+	    for(var r=0; r<brickRowCount; r++) {
+	      var b = bricks[c][r];
+	      if(b.status == 1) { // brique status 1 = non touché
+	      	//chngement de direction de la balle si elle croise coordonné d'une brique
+	        if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+	          dy = -dy;
+	          b.status = 0; // la brique est touché, hit, on change le status à 0
+	          score++;
+	          //affiche un message de victoire quand toutes les briques sont détruites
+	          if(score == brickRowCount*brickColumnCount) {
+	            alert("YOU WIN, CONGRATS!");
+	            document.location.reload();//// quand le bouton est cliqué relance le jeux
+	            clearInterval(interval); // demanadé par Chrome pour terminer le jeux
+	          }
+	        }
+	      }
+	    }
+	  }
+	}
+
+	// dessine un cercle , la balle
+	function drawBall() {
+	  ctx.beginPath();
+	  ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+	  ctx.fillStyle = "#0095DD";
+	  ctx.fill();
+	  ctx.closePath();
+	}
+
+	// dessine un rectangle , le paddle
+	function drawPaddle() {
+	  ctx.beginPath();
+	  ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+	  ctx.fillStyle = "#0095DD";
+	  ctx.fill();
+	  ctx.closePath();
+	}
+	// loop briques dans tableau "brick" et les dessines
+	function drawBricks() { 
+	  for(var c=0; c<brickColumnCount; c++) {
+	    for(var r=0; r<brickRowCount; r++) {
+	      if(bricks[c][r].status == 1) {
+	      	// positions des briques
+		    // c = colonne.   r = row
+	        var brickX = (r*(brickWidth+brickPadding))+brickOffsetLeft;
+	        var brickY = (c*(brickHeight+brickPadding))+brickOffsetTop;
+	        bricks[c][r].x = brickX;
+	        bricks[c][r].y = brickY;
+	        // dessine les briques
+	        ctx.beginPath();
+	        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+	        ctx.fillStyle = "#0095DD";
+	        ctx.fill();
+	        ctx.closePath();
+	      }
+	    }
+	  }
+	}
+	// création de l'affichage du score
+	function drawScore() {
+	  ctx.font = "16px Arial";
+	  ctx.fillStyle = "#0095DD";
+	  ctx.fillText("Score: "+score, 8, 20);
+	}
+
+	function drawLives() {
+	    ctx.font = "16px Arial";
+	    ctx.fillStyle = "#0095DD";
+	    ctx.fillText("Lives: "+lives, canvas.width-65, 20);
+	}
+
+	function draw() {
+		// efface le contenu du canvas
+	  ctx.clearRect(0, 0, canvas.width, canvas.height);
+	  // dessine les différent élément
+	  drawBricks();
+	  drawBall();
+	  drawPaddle();
+	  drawScore();
+	  collisionDetection();
+	  drawLives();
+
+		// permet de rebondir sur les mur en regarand la position de la balle - son rayon si elle touche un mur la direction est inversé
+	  if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+	    dx = -dx;
+	  }
+	  if(y + dy < ballRadius) {
+	    dy = -dy;
+	  }
+	  else if(y + dy > canvas.height-ballRadius) {
+	    if(x > paddleX && x < paddleX + paddleWidth) { // controle si la balle  hit le paddle
+	      dy = -dy;
+	    }
+	    else {
+	    	// met fin au jeu
+	      lives--;
+			if(!lives) {
+			    alert("GAME OVER");
+			    document.location.reload();
+			}
+			else {
+			    x = canvas.width/2;
+			    y = canvas.height-30;
+			    dx = 2;
+			    dy = -2;
+			    paddleX = (canvas.width-paddleWidth)/2;
+			}
+	    }
+	  }
+
+	  if(rightPressed && paddleX < canvas.width-paddleWidth) {
+	    paddleX += paddleVelocity;
+	  }
+	  else if(leftPressed && paddleX > 0) {
+	    paddleX -= paddleVelocity;
+	  }
+	  // met à jour la position de cercle 
+	  x += dx;
+	  y += dy;
+	  requestAnimationFrame(draw);
+	}
+
+	draw();
+</script>
+</body>
+</html>
