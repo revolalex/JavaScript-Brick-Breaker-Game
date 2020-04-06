@@ -1,5 +1,5 @@
 # JavaScript-Brick-Breaker-Game
- This game is made in an HTML canvas in Javascript
+ This game is made in an HTML canvas in JavaScript
 - DOM
 - Listener
 - Draw
