@@ -1,7 +1,7 @@
 # JavaScript-Brick-Breaker-Game
  This game is made in an HTML canvas in JavaScript
 - DOM
-- Listener
+- addEventListener
 - Draw
 - Collisin detection
 - Animation frame
