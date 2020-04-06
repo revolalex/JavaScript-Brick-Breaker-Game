@@ -8,6 +8,7 @@
 
 It's was fun to make it :)
 
+<img width="500" alt="Simulator Screen Shot" src="https://user-images.githubusercontent.com/56839789/78580861-57355680-7833-11ea-8429-8a34f196c6e3.gif">
 
 
 
@@ -16,6 +17,5 @@ It's was fun to make it :)
 
 <img width="500" alt="Simulator Screen Shot" src="https://user-images.githubusercontent.com/56839789/78563545-6f997700-781b-11ea-8541-f0416b288b38.png">
 
-<img width="500" alt="Simulator Screen Shot" src="https://user-images.githubusercontent.com/56839789/78580861-57355680-7833-11ea-8429-8a34f196c6e3.gif">
 
 
