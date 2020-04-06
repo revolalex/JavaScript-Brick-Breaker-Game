@@ -1,10 +1,10 @@
 # JavaScript-Brick-Breaker-Game
-This is game is made in an HTML canvas in Javascript
--DOM
--Listener
--Draw
--Collisin detection
--Animation frame
+This game is made in an HTML canvas in Javascript
+#DOM
+#Listener
+#Draw
+#Collisin detection
+#Animation frame
 
 It's was fun to make it :)
 
