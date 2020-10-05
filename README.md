@@ -1,4 +1,7 @@
+<img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2Frevolalex%2FJavaScript-Brick-Breaker-Game" alt="Hits">.
 # JavaScript-Brick-Breaker-Game
+
+
  This game is made in an HTML canvas in JavaScript
 - DOM
 - addEventListener
