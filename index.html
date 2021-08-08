@@ -104,7 +104,7 @@
 	      var b = bricks[c][r];
 	      if(b.status == 1) { // brique status 1 = non touché
 	      	//chngement de direction de la balle si elle croise coordonné d'une brique
-	        if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+	        if(x+ballRadius > b.x && x < b.x+brickWidth+ballRadius && y+ballRadius > b.y && y < b.y+brickHeight+ballRadius) {
 	          dy = -dy;
 	          b.status = 0; // la brique est touché, hit, on change le status à 0
 	          score++;
@@ -189,7 +189,7 @@
 	  if(y + dy < ballRadius) {
 	    dy = -dy;
 	  }
-	  else if(y + dy > canvas.height-ballRadius) {
+	  else if(y + dy > canvas.height-ballRadius-paddleHeight) {
 	    if(x > paddleX && x < paddleX + paddleWidth) { // controle si la balle  hit le paddle
 	      dy = -dy;
 	    }
